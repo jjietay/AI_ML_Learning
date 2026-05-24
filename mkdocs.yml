@@ -1,6 +1,28 @@
 site_name: AI/ML Notes
+
 nav:
   - Home: index.md
-  - CNNs: theory/cnn.md
-  - SE Blocks: theory/se_block.md
-  # ... etc
+  - Theory:
+    - Neuron: theory/1_neuron.md
+    - CNN: theory/2_cnn.md
+    - SE Block: theory/3_se_block.md
+    - Dropout & Coadaptation: theory/4_dropout_coadaptation.md
+    - RNN: theory/5_rnn.md
+    - Transformers & Attention: theory/6_transformers_attention.md
+    - Multilayer Perceptrons: theory/7_multilayer_perceptrons.md
+    - ReLU & Gated: theory/8_relu_gated.md
+    - BERT: theory/bert.md
+    - DiT: theory/dit.md
+    - Ensemble: theory/ensemble.md
+    - GAN: theory/gan.md
+    - GRU: theory/gru.md
+    - LSTM: theory/lstm.md
+    - Swin Transformer: theory/swin_transformer.md
+    - Vanishing Gradients: theory/vanishing_grad.md
+    - ViT: theory/vit.md
+
+theme:
+  name: material
+
+plugins:
+  - search
