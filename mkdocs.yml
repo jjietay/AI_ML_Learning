@@ -1,4 +1,5 @@
 site_name: AI/ML Learning Notes
+site_url: https://jjietay.github.io/AI_ML_Learning/
 
 nav:
   - Home: index.md
