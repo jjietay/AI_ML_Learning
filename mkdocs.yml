@@ -1,0 +1,6 @@
+site_name: AI/ML Notes
+nav:
+  - Home: index.md
+  - CNNs: theory/cnn.md
+  - SE Blocks: theory/se_block.md
+  # ... etc
