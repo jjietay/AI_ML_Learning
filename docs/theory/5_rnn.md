@@ -1,6 +1,7 @@
 # Recurrent Neural Network (RNN)
 
 ## 1. The Unrolled Network & The "Hidden State"
+
 - **The Core Concept:** Unlike standard Feedforward Neural Networks where inputs are processed independently, an RNN contains a loop that allows information to be passed from one step to the next.
 - **Unrolling:** When "unrolled" over time, an RNN looks like a sequence of standard neural networks, one for each timestep. 
 - **The Hidden State:** The network takes two inputs at any given timestep: the current data point and the **hidden state** (the output/memory from the previous timestep).

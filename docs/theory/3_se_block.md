@@ -13,6 +13,7 @@ These two assumptions drastically reduce parameters compared to a fully-connecte
 
 
 ## Introduction
+
 - after a CNN processes an image, it produces a stack of feature maps, one map per filter (kernel)
 - CNN treats all feature maps as **equally important**
 - this is where the **Squeeze and Excitation Block** comes in
@@ -20,13 +21,16 @@ These two assumptions drastically reduce parameters compared to a fully-connecte
 - meaning it decides which channels we should trust more than the other
 
 ## How it works
+
 - a typical SE block contains of 3 steps: Squeeze, Excitation, Scale
 
 ### Squeeze
+
 - each feature map is a 2D spatial grid (e.g. 7x7 pixels)
 - Squeeze performs **Global Average Pooling** which takes each channel and compresses it down to a single number by averaging all the pixels of that particular channel
 
 ### Excitation
+
 - assuming we have a total of X number of channels, we have X numbers of max pools
 - the vector of X numbers is passed through a **2-layer fully connected network** with a bottleneck (such as shrinking it to smaller than X, and then expand back to X)
 - this is then followed by a sigmoid function
@@ -34,6 +38,7 @@ These two assumptions drastically reduce parameters compared to a fully-connecte
 - the bottleneck forces the network to learn compressed generalised relationships between channels rather than memorising
 
 ### Scale
+
 - each channel's feature map is multiplied by its importance score
 - channels with a score near 1 passes through strongly while those channels with scores near 0 gets suppressed
 

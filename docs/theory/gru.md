@@ -1,18 +1,16 @@
 # Gated Recurrent Units (GRU)
 
-<div align="center">
-  <img src="../images/gru_img1.png" alt="Alt text" width="600">
-</div>
+![GRU diagram 1](../assets/images/gru_img1.png)
 
-<div align="center">
-  <img src="../images/gru_img2.png" alt="Alt text" width="600">
-</div>
+![GRU diagram 2](../assets/images/gru_img2.png)
 
 ## Introduction
+
 - 2 gates in GRU compared to 3 gates in LSTM
 
 ---
 ### Reset Gate, $r_t$
+
 - similar to forget gate in LSTM
 - takes previous hidden state ($h_{t-1}$) and current input ($x_t$) and multiply them with their corresponding weight matrices ($W_{xr}, W_{hr}$)
 - add a bias ($b_r$) and apply the sigmoid activation function
@@ -20,6 +18,7 @@
 
 ---
 ### Candidate Hidden State, $\tilde{h}_{t}$
+
 - it is a candidate for the next hidden state
 - calculation for the next hidden state candidate heavily relies on the reset gate
 - similar to cell state in LSTM
@@ -29,6 +28,7 @@
 
 ---
 ### Update Gate, $h_t$
+
 - selects what to transfer from the previous hidden state and what to select from the current candidate hidden state to the next step
 - multiply current input ($x_t$) and previous hidden state ($h_{t-1}$) with respective weights ($W_{xz}$, $W_{hz}$) and then add bias ($b_z$)
 - and then apply a sigmoid function, resulting in $z_t$
@@ -40,6 +40,7 @@
 
 ---
 ### Comparison between LSTM and GRU:
+
 - LSTM has 3 gates around 4 neural networks
 - GRU has 2 gates around 3 neural networks
 - LSTM has better long term memory due to more gates

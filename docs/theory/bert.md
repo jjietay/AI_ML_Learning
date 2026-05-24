@@ -1,12 +1,14 @@
 # Bidirectional Encoder Representations from Transformers
 
 ## Introduction
+
 - every word looks at every other word (self-attention which is also in transformers)
 - but how this is different from transformers is that bert only has the encoder part of transformers, no decoder part
 - self-attention makes it parallisable (training time falls, accuracy rises)
 - bert comes after transformers
 
 ## How it works
+
 - bert plays a guessing game
 - each word in the sentence contains a [MASK] (unsupervised learning)
 - for example, "[CLS] how are [MASK] doing today [SEP]"

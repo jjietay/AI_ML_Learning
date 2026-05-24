@@ -1,12 +1,14 @@
 # Shifted Windows (Swin) Transformers
 
 ## Problem that Swin solves:
+
 - ViT is good for generalization or looking at global features
 - However, if we need to look at the closer up parts of the image, a standard ViT with 16*16 sized patches are too big
 - If we shrink it such that every pixel is a patch, there will be too many patches and the computation cost will be high
 - for a 1920px x 1080px image, there would be 2+ million tokens
 
 ## How swin transformers works:
+
 - it first starts with small patches for the first transformer layer
 - subsequently, merges them into bigger ones in the deeper transformer layers
 - swin splits the image up into 4x4 patche of same 3 RGB Channels

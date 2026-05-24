@@ -1,6 +1,7 @@
 # Generative Adversarial Networks (GAN)
 
 ## Contains of 2 Neural Networks that fight with each other:
+
 - Generator
 - Discriminator
 - Generator keeps improving the output

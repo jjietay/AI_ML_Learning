@@ -1,4 +1,5 @@
 # Ensemble of Models
+
 - combining multiple models to make a prediction
 
 ## 2 Methods
@@ -11,22 +12,28 @@
 - performing average will still divide everything by the same amount, so we avoid doing an extra unecessary steps
 
 # Bootstrap AGGregatING (BAGGING)
+
 ## Introduction
+
 - to reduce overfitting (chances of model memorising dataset)
 - used when we wanna improve stability or performance of ML algorithms
 
 ## How it works
+
 - bagging generates a new dataset for each model you train
 - it randomly samples (with replacement) from your original data
 - for every model you train, bagging will take a subset of data and create a new dataset
 - selection happens randomly with replacement, meaning new dataset could contain duplicates
 
 # Boosting
+
 ## Introduction
+
 - increase performance on harder or less common examples
 - but slower to train than BAGGING
 
 ## How it works
+
 - iteratively creating new models by training the models to better learn the data that the previous model misclassified
 - boosting starts by training a model on the original dataset normally
 - for every example that was misclassified, they increased the weights

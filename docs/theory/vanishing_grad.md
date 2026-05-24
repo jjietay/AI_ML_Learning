@@ -1,4 +1,5 @@
 ## Vanishing Gradient Problem
+
 - this happens when the network is very deep
 - during backpropagation, loss.backward() calculates gradients and sends them backwards through every layer
 - in a deep network, when the gradient reaches the earlier hidden layers
