@@ -1,6 +1,23 @@
 site_name: AI/ML Learning Notes
 site_url: https://jjietay.github.io/AI_ML_Learning/
 
+theme:
+  name: material
+  palette:
+    # Dark mode toggle
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
 nav:
   - Home: index.md
   - Theory:
@@ -21,9 +38,6 @@ nav:
     - Swin Transformer: theory/swin_transformer.md
     - Vanishing Gradients: theory/vanishing_grad.md
     - ViT: theory/vit.md
-
-theme:
-  name: material
 
 plugins:
   - search
