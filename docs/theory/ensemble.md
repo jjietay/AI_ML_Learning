@@ -1,44 +1,68 @@
-# Ensemble of Models
+# Ensemble Methods
 
-- combining multiple models to make a prediction
+**Ensemble learning** combines multiple models to produce a better prediction than any single model alone. The key idea: diverse models make different mistakes, and averaging them out improves overall accuracy.
 
-## 2 Methods
-1) Majority
-- choose most common prediction made
+## Combining Predictions
 
-2) Summation
-- sum the probabilties of option A and B seperately
-- the higher sum of either option A or B will be chosen to be the most probably result
-- performing average will still divide everything by the same amount, so we avoid doing an extra unecessary steps
+Two common strategies for merging individual model outputs:
 
-# Bootstrap AGGregatING (BAGGING)
+| Method | How it works | Best for |
+|---|---|---|
+| **Majority vote** | Choose the most common prediction across all models | Classification |
+| **Summation** | Sum the probability scores for each class; pick the highest | Classification with probabilities |
+
+> Note: Averaging is equivalent to summation for the purpose of picking the winner, so the extra division step is unnecessary.
+
+---
+
+# Bootstrap Aggregating (Bagging)
 
 ## Introduction
 
-- to reduce overfitting (chances of model memorising dataset)
-- used when we wanna improve stability or performance of ML algorithms
+**Bagging** reduces overfitting by training each model on a *different random sample* of the data, rather than all models seeing the same training set.
 
-## How it works
+## How It Works
 
-- bagging generates a new dataset for each model you train
-- it randomly samples (with replacement) from your original data
-- for every model you train, bagging will take a subset of data and create a new dataset
-- selection happens randomly with replacement, meaning new dataset could contain duplicates
+1. From the original dataset, **randomly sample with replacement** to create a new dataset of the same size
+2. Train one model on this new dataset
+3. Repeat for every model in the ensemble where each sees a slightly different dataset
+4. At inference time, aggregate all model predictions (majority vote or sum)
+
+> **With replacement** means the same data point can appear multiple times in one dataset, and some points may not appear at all (these are called *out-of-bag* samples and can be used for validation).
+
+## Effect
+
+Because each model is trained on a different subset of the data, individual models overfit to different noise. When combined, the noise cancels out and the true signal is amplified.
+
+---
 
 # Boosting
 
 ## Introduction
 
-- increase performance on harder or less common examples
-- but slower to train than BAGGING
+**Boosting** improves performance on hard or rare examples by iteratively focusing each new model on the mistakes of the previous one. It is more powerful than bagging but slower to train.
 
-## How it works
+## How It Works
 
-- iteratively creating new models by training the models to better learn the data that the previous model misclassified
-- boosting starts by training a model on the original dataset normally
-- for every example that was misclassified, they increased the weights
-- for those correctly classified, they decreased the weights
-- weights are ways of mathematically expressing importance of a training sample to out model
-- higher weight --> the more the model tries to learn to predict that example correctly
-- $prediction = w_1out_1 + w_2out_2 + w_3out_3$
-- weights here is the accuracy or error that the model for that particular dataset its trained on
+1. Train a base model on the original dataset with **equal weights** on all samples
+2. Identify which samples were **misclassified**
+3. **Increase the weights** of misclassified samples (they matter more now)
+4. **Decrease the weights** of correctly classified samples
+5. Train the next model on the re-weighted dataset
+6. Repeat the training where each model in the sequence focuses more on what previous ones got wrong
+7. Final prediction is a **weighted sum** of all models:
+
+$$
+\text{prediction} = w_1 \cdot \text{out}_1 + w_2 \cdot \text{out}_2 + w_3 \cdot \text{out}_3
+$$
+
+where each weight \(w_i\) reflects that model's accuracy on its training data.
+
+## Bagging vs. Boosting
+
+| | Bagging | Boosting |
+|---|---|---|
+| Training | Parallel (models are independent) | Sequential (each depends on previous) |
+| Focus | Reduce variance / overfitting | Reduce bias / improve hard examples |
+| Speed | Faster | Slower |
+| Example algorithms | Random Forest | AdaBoost, XGBoost, LightGBM |

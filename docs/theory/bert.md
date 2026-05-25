@@ -1,27 +1,65 @@
-# Bidirectional Encoder Representations from Transformers
+# BERT
 
-## Introduction
+**Bidirectional Encoder Representations from Transformers (BERT)** is a language model that reads text in *both directions simultaneously* using the Transformer encoder. Unlike a standard language model that predicts the next word left-to-right, BERT can attend to every other word from both sides at once, giving it a much richer understanding of context.
 
-- every word looks at every other word (self-attention which is also in transformers)
-- but how this is different from transformers is that bert only has the encoder part of transformers, no decoder part
-- self-attention makes it parallisable (training time falls, accuracy rises)
-- bert comes after transformers
+## Key Difference from the Original Transformer
 
-## How it works
+| | Transformer | BERT |
+|---|---|---|
+| Architecture used | Encoder + Decoder | **Encoder only** |
+| Reading direction | Left-to-right (decoder is masked) | **Bidirectional** |
+| Primary task | Sequence-to-sequence (translation) | Understanding / classification |
+| Training objective | Next-token prediction | Masked Language Modelling + NSP |
 
-- bert plays a guessing game
-- each word in the sentence contains a [MASK] (unsupervised learning)
-- for example, "[CLS] how are [MASK] doing today [SEP]"
-- training data generator will first mask out 15% of the sentence
-- 80% will recieve [MASK] token
-- 10% will recieve a random word
-- 10% will recieve the original word
-- during fine-tuning bert will never see masked tokens in real texts
-- this forces model to pay attention to context
-- bert can look at text bi-directionally (more powerful)
-- [CLS] and [SEP] is used for sentence seperation
-- every input starts with the [CLS] token and the sentence A and then [SEP]/seperation token then [CLS] then sentence B
-- [CLS] uses self-attention to look at every word in both sentences
-- the final representation of [CLS] goes into binary classifier which checks if sentence B is "next" (after sentence A) or not
-- achieving 97% accuracy
+---
 
+## Pre-training Tasks
+
+BERT learns through two self-supervised tasks on unlabelled text.
+
+### 1. Masked Language Modelling (MLM)
+
+BERT randomly masks 15% of tokens in each sentence and learns to predict the masked words from context:
+
+- **80%** of selected tokens --> replaced with `[MASK]`
+- **10%** of selected tokens --> replaced with a **random word**
+- **10%** of selected tokens --> kept as the **original word**
+
+```
+Input:  "[CLS] how are [MASK] doing today [SEP]"
+Target: predict "you" at the masked position
+```
+
+This forces the model to use bidirectional context rather than just left-to-right patterns.
+
+### 2. Next Sentence Prediction (NSP)
+
+BERT also learns whether two sentences naturally follow each other:
+
+```
+[CLS] Sentence A [SEP] Sentence B [SEP]
+                                   ↓
+                    Binary output: IsNext / NotNext
+```
+
+- The `[CLS]` token attends to all words in both sentences via self-attention
+- Its final representation feeds into a binary classifier
+- Achieves **~97% accuracy** on the NSP task
+
+---
+
+## Special Tokens
+
+| Token | Purpose |
+|---|---|
+| `[CLS]` | Prepended to every input; its final embedding is used for classification tasks |
+| `[SEP]` | Separates sentence A from sentence B; also marks end of input |
+| `[MASK]` | Replaces tokens that the model must predict during MLM pre-training |
+
+---
+
+## Why It Works
+
+- **Bidirectional attention**: every token sees every other token in both directions simultaneously, unlike GPT's left-to-right attention
+- **Parallelisable**: self-attention replaces recurrence, so training is much faster than RNN-based models
+- **Transfer learning**: pre-train once on large unlabelled text, then fine-tune on small labelled datasets for specific tasks (classification, QA, NER, etc.)

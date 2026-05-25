@@ -1,11 +1,39 @@
-## Mutli-layer Perceptrons (MLP)
+# Multilayer Perceptrons (MLP)
 
-- also called a Feed-forward Network (FFN)
+Also called a **Feed-Forward Network (FFN)**, the MLP is the second core sub-block inside a Transformer, applied after the attention mechanism. It introduces non-linearity and lets the model process each token's representation independently.
 
-### Steps
+## Role in a Transformer Block
 
-- for each token, we perform independently:
+```
+Input tokens
+     ↓
+[Multi-Head Self-Attention]
+     ↓
+[MLP / FFN]   ← applied independently to each token
+     ↓
+Output tokens
+```
 
-    1) use a linear layer or linear projection
-    2) Apply Rectified Linear Unit (RELU)
-    3) linear layer/linear projection
+## Steps
+
+For each token independently:
+
+1. **Linear projection (up)** --> expand the token embedding into a larger hidden dimension (typically 4×)
+2. **Activation (ReLU / GELU)** --> introduce non-linearity; ReLU zeros out negatives, GELU is a smoother variant
+3. **Linear projection (down)** --> compress back to the original embedding dimension
+
+```
+token (d_model)
+   → Linear: d_model     --> d_model * 4
+   → ReLU / GELU
+   → Linear: 4·d_model   --> d_model
+```
+
+## Key Points
+
+| Property | Detail |
+|---|---|
+| Applied per token | Each token goes through the MLP independently, i.e. no cross-token mixing |
+| Same weights | The same MLP is reused for every token position |
+| Complements attention | Attention mixes information *across* tokens; MLP processes each token *within* |
+| Parameter-heavy | The two projection matrices hold ~2/3 of a Transformer's total parameters |

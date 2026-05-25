@@ -1,23 +1,62 @@
-# Shifted Windows (Swin) Transformers
+# Swin Transformer
 
-## Problem that Swin solves:
+The **Shifted Window (Swin) Transformer** is a hierarchical vision backbone that addresses the computational bottleneck of applying self-attention to high-resolution images, while preserving the ability to capture both fine-grained local features and broad global context.
 
-- ViT is good for generalization or looking at global features
-- However, if we need to look at the closer up parts of the image, a standard ViT with 16*16 sized patches are too big
-- If we shrink it such that every pixel is a patch, there will be too many patches and the computation cost will be high
-- for a 1920px x 1080px image, there would be 2+ million tokens
+## The Problem with Standard ViT
 
-## How swin transformers works:
+| Issue | Detail |
+|---|---|
+| Large patches miss detail | Standard ViT uses 16×16 patches which is too coarse for dense tasks like detection or segmentation |
+| Pixel-level patches are too expensive | A 1920×1080 image would have 2+ million tokens; attention cost scales quadratically |
 
-- it first starts with small patches for the first transformer layer
-- subsequently, merges them into bigger ones in the deeper transformer layers
-- swin splits the image up into 4x4 patche of same 3 RGB Channels
-- 4 x 4 x 8 feature dimensionality = 48 entries (patches are smaller compared to ViT)
-- self-attention is not quadratically scaled to the sequence length
-- it only occupies the nearest m neigherbours
-- its called "Shifted Window based Self-attention"
-- output is merged via a "Merging Layer"
-- concatenates 2 by 2 neighbouring patches (not in the sequence)
-- passed through a linear layer
-- Attention window is shifted wrt the previous layer (similar to strided convolution)
-- layer 1 can now communicate to layer 2 so on so forth
+---
+
+## How Swin Solves It
+
+Swin takes a **hierarchical** approach which is to start small and then merge gradually and restricts self-attention to **local windows** instead of the full image.
+
+### Step 1: Small Patches
+
+Images are split into **4×4 patches** (much finer than ViT's 16×16). Each patch has 3 RGB channels, giving an initial feature dimension of `4 × 4 × 3 = 48`.
+
+### Step 2: Local Window Self-Attention
+
+Instead of attending globally, each token only attends to its **nearest m × m neighbours** (typically m = 7). This makes attention cost linear in image size rather than quadratic.
+
+```
+Image → [Window partition] → Self-attention within each window → Output
+```
+
+### Step 3: Shifted Windows
+
+To allow information to flow *between* windows across layers, Swin **shifts the window grid** between consecutive layers similar to strided convolution:
+
+```
+Layer 1:  windows at positions (0, 0), (0, 7), (7, 0), ...
+Layer 2:  windows shifted by (3, 3) → different tokens can now communicate
+```
+
+This means **layer 1 can communicate with layer 2**, and so on across the depth of the network.
+
+### Step 4: Patch Merging
+
+After each stage, a **Merging Layer** concatenates 2×2 neighbouring patches and projects them through a linear layer, halving the spatial resolution while doubling the feature dimension, exactly like strided convolution in a CNN:
+
+```
+Stage 1: 56×56 patches, dim=96
+Stage 2: 28×28 patches, dim=192
+Stage 3: 14×14 patches, dim=384
+Stage 4:  7×7  patches, dim=768
+```
+
+---
+
+## Swin vs. ViT
+
+| | ViT | Swin |
+|---|---|---|
+| Patch size | 16×16 (fixed) | 4×4, merges hierarchically |
+| Attention scope | Global (all patches) | Local windows (shifted each layer) |
+| Computation | Quadratic in image size | Linear in image size |
+| Feature hierarchy | None | Yes, like a CNN's multi-scale features |
+| Best for | Image classification | Detection, segmentation, classification |

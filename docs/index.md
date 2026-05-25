@@ -1,3 +1,7 @@
-# Welcome to AI/ML Learning
+# AI/ML Learning Notes
 
-This document contains my understanding of AI/ML concepts, along with code implementations and my learning processes from juypter notebooks. Navigate to the sidebar to view my work.
+Welcome! This site documents my understanding of core AI/ML concepts, built up through reading, implementation, and experimentation.
+
+Each page covers one concept with theory and explanation from my own understanding. Code implementations and experiments live in the accompanying Jupyter notebooks.
+
+Use the sidebar on the left to navigate between topics.

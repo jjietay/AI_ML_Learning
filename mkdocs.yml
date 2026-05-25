@@ -3,41 +3,72 @@ site_url: https://jjietay.github.io/AI_ML_Learning/
 
 theme:
   name: material
+  font:
+    text: Inter
+    code: JetBrains Mono
   palette:
-    # Dark mode toggle
-    - scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+    scheme: slate
+    primary: indigo
+    accent: indigo
+  features:
+    - content.code.copy
+    - navigation.top
+    - navigation.sections
 
 nav:
   - Home: index.md
   - Theory:
-    - Neuron: theory/1_neuron.md
-    - CNN: theory/2_cnn.md
-    - SE Block: theory/3_se_block.md
-    - Dropout & Coadaptation: theory/4_dropout_coadaptation.md
-    - RNN: theory/5_rnn.md
-    - Transformers & Attention: theory/6_transformers_attention.md
-    - Multilayer Perceptrons: theory/7_multilayer_perceptrons.md
-    - ReLU & Gated: theory/8_relu_gated.md
-    - BERT: theory/bert.md
-    - DiT: theory/dit.md
-    - Ensemble: theory/ensemble.md
-    - GAN: theory/gan.md
-    - GRU: theory/gru.md
-    - LSTM: theory/lstm.md
-    - Swin Transformer: theory/swin_transformer.md
-    - Vanishing Gradients: theory/vanishing_grad.md
-    - ViT: theory/vit.md
+    - Foundations:
+      - Neuron: theory/1_neuron.md
+      - Multilayer Perceptrons: theory/7_multilayer_perceptrons.md
+      - "ReLU & Gated": theory/8_relu_gated.md
+      - Vanishing Gradients: theory/vanishing_grad.md
+      - "Dropout & Coadaptation": theory/4_dropout_coadaptation.md
+      - Ensemble: theory/ensemble.md
+
+    - Convolutional Networks:
+      - CNN: theory/2_cnn.md
+      - SE Block: theory/3_se_block.md
+
+    - Sequence Models:
+      - RNN: theory/5_rnn.md
+      - LSTM: theory/lstm.md
+      - GRU: theory/gru.md
+
+    - Generative Models:
+      - GAN: theory/gan.md
+
+    - "Attention & Transformers":
+      - "Transformers & Attention": theory/6_transformers_attention.md
+      - BERT: theory/bert.md
+
+    - Vision Transformers:
+      - ViT: theory/vit.md
+      - Swin Transformer: theory/swin_transformer.md
+      - DiT: theory/dit.md
 
 plugins:
   - search
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - admonition
+  - tables
+  - def_list
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css

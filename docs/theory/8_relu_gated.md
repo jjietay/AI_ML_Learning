@@ -1,39 +1,71 @@
-# ReLU vs Gated Activations
+# ReLU vs. Gated Activations
 
-## ReLU (classical MLP nonlinearity)
+Modern language models have moved away from the original ReLU non-linearity in their MLP blocks toward **gated activations** (e.g. SwiGLU). This page explains the structural difference.
 
-- Formula: `output = relu(x @ W)`
-- ONE branch: linear transformation, then apply ReLU
-- ReLU itself: `max(0, x)` — negatives become 0, positives pass through unchanged
-- All-or-nothing per dimension: a dimension is either killed or passed through linearly
-- Used in the original 2017 transformer paper
+---
 
-## Gated (modern LLM nonlinearity, e.g., SwiGLU)
+## ReLU (Classical MLP Non-linearity)
 
-- Formula: `output = swish(x @ W1) * (x @ W2)`
-- TWO branches, multiplied element-wise:
-    - Gate branch: `swish(x @ W1)` — acts as a learned, input-dependent valve
-    - Content branch: `x @ W2` — the signal being gated
-- Both branches use the same input x but with different learned matrices (W1 and W2)
-- Used in modern LLMs: Llama, Mistral, PaLM, etc.
+**Formula:** `output = relu(x @ W)`
 
-## Key Difference (the actual one)
+ReLU uses a **single branch**: apply a linear transformation, then threshold negatives to zero.
 
-- NOT "ReLU has no learnable params, gated does" — both have learnable params (inside the W matrices)
-- The real difference is structural:
-    - ReLU = 1 branch → fixed nonlinearity → all-or-nothing per dim
-    - Gated = 2 branches multiplied → continuous, input-dependent valve
-- Example: gating can say "for this input, dial dimension 5 down to 20%; for that input, let it through at 100%"
-- ReLU can only kill or pass linearly — no in-between
+```
+x  →  Linear (x @ W)  →  ReLU (max(0, z))  →  output
+```
 
-## Cost of Gating
+- `max(0, x)`: negatives become 0, positives pass through unchanged
+- **All-or-nothing** per dimension: a feature is either killed completely or passed through linearly
+- No in-between --> no way to say "pass 40% of this feature through"
+- Used in the original 2017 Transformer paper
 
-- More parameters (two projection matrices W1, W2 instead of one W)
-- More compute per forward pass
-- Worth it in practice: noticeable quality gain in large models
+---
 
-## Variants of Gated
+## Gated Activations (Modern LLMs, e.g. SwiGLU)
 
-- GLU: original, uses sigmoid as the gate activation
-- SwiGLU: uses swish — most popular in modern LLMs (Llama, Mistral)
-- GeGLU: uses GELU as the gate activation
+**Formula:** `output = swish(x @ W1) * (x @ W2)`
+
+Gated activations use **two branches**, multiplied element-wise:
+
+```
+x  →  Linear (x @ W1)  →  Swish  ─┐
+                                    × →  output
+x  →  Linear (x @ W2)  ────────────┘
+         ↑ content branch    ↑ gate branch
+```
+
+| Branch | Role |
+|---|---|
+| **Gate branch** `swish(x @ W1)` | A learned, input-dependent valve which controls how much of each feature passes through |
+| **Content branch** `x @ W2` | The signal being modulated |
+
+Both branches use the **same input** `x` but with **different learned weight matrices** (`W1` and `W2`).
+
+---
+
+## The Real Difference
+
+> The key difference is **structural**, not about learnable parameters since both approaches have weight matrices.
+
+| | ReLU | Gated (SwiGLU) |
+|---|---|---|
+| Branches | 1 | 2 (multiplied together) |
+| Non-linearity | Fixed (hard threshold) | Continuous, input-dependent |
+| Per-dimension control | Kill or pass (binary) | Dial from 0% to 100% |
+| Parameters | `W` (one matrix) | `W1` + `W2` (two matrices) |
+| Compute | Lower | ~2× higher |
+| Quality | Good | Noticeably better at scale |
+
+**Example:** A gated activation can say *"for this particular input, let dimension 5 pass through at 20%; for another input, let it through at 100%"*. ReLU can only kill a dimension or pass it linearly, there is no fine-grained control.
+
+---
+
+## Variants of Gated Activations
+
+| Variant | Gate activation | Used in |
+|---|---|---|
+| **GLU** | Sigmoid | Original gating paper |
+| **SwiGLU** | Swish | Llama, Mistral, PaLM |
+| **GeGLU** | GELU | Various modern models |
+
+SwiGLU is the most popular today. The extra parameter cost (two projection matrices instead of one) is consistently worth the quality gain in large models.

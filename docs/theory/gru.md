@@ -1,47 +1,77 @@
 # Gated Recurrent Units (GRU)
 
+A **GRU** is a streamlined version of the LSTM that achieves similar performance with fewer gates and less computation. It merges the LSTM's cell state and hidden state into a single **hidden state** \(h_t\), and uses only **two gates** to control information flow.
+
 ![GRU diagram 1](../assets/images/gru_img1.png)
 
 ![GRU diagram 2](../assets/images/gru_img2.png)
 
-## Introduction
+---
 
-- 2 gates in GRU compared to 3 gates in LSTM
+## Overview
+
+| Property | GRU | LSTM |
+|---|---|---|
+| Gates | **2** (Reset + Update) | 3 (Forget + Input + Output) |
+| Internal networks | 3 | 4 |
+| Memory mechanism | Single hidden state \(h_t\) | Separate cell state + hidden state |
+| Long-term memory | Good | Slightly better (more gates) |
+| Computation | **Lower** | Higher |
 
 ---
-### Reset Gate, $r_t$
 
-- similar to forget gate in LSTM
-- takes previous hidden state ($h_{t-1}$) and current input ($x_t$) and multiply them with their corresponding weight matrices ($W_{xr}, W_{hr}$)
-- add a bias ($b_r$) and apply the sigmoid activation function
-- we then mutiply this ($r_t$) with the previous hidden state (multiply element wise)
+## Gate 1: Reset Gate \(r_t\)
 
----
-### Candidate Hidden State, $\tilde{h}_{t}$
+The **Reset Gate** controls how much of the *previous* hidden state is allowed to influence the candidate hidden state, similar to the Forget Gate in an LSTM.
 
-- it is a candidate for the next hidden state
-- calculation for the next hidden state candidate heavily relies on the reset gate
-- similar to cell state in LSTM
-- use current input ($x_t$) and multiply it with weight matrix ($W_xh$)
-- using previous hidden state ($h_{t-1}$) and multiplying it element wise with reset gate ($r_t$) previously calculated
-- multiply this with a weight matrix ($W_{hh}$) and add a bias ($b_h$) and lastly applying a tanh function
+**Formula:**
 
----
-### Update Gate, $h_t$
+$$r_t = \sigma(W_{xr} x_t + W_{hr} h_{t-1} + b_r)$$
 
-- selects what to transfer from the previous hidden state and what to select from the current candidate hidden state to the next step
-- multiply current input ($x_t$) and previous hidden state ($h_{t-1}$) with respective weights ($W_{xz}$, $W_{hz}$) and then add bias ($b_z$)
-- and then apply a sigmoid function, resulting in $z_t$
-- to get the final hidden state output $h_t$: multiply $z_t$ element wise with candidate hidden state $\tilde{h}_{t}$
-- multiply the mirroring of $z_t$ (1-$z_t$) element wise with previous hidden state  $h_{t-1}$
-- add these 2 together, resulting in $h_t$
-- so what we are doing is just getting what's important from the previous hidden state and what's important from candidate hidden state
-- and transfering the final output to next step as the new hidden state output
+1. Take the previous hidden state \(h_{t-1}\) and current input \(x_t\)
+2. Multiply by their respective weight matrices \(W_{xr}\), \(W_{hr}\) and add bias \(b_r\)
+3. Apply **sigmoid** --> output \(r_t \in (0, 1)\)
+4. \(r_t\) is multiplied element-wise with \(h_{t-1}\) before feeding into the candidate state
+
+A value near **0** means "forget most of the past"; near **1** means "keep most of the past".
 
 ---
-### Comparison between LSTM and GRU:
 
-- LSTM has 3 gates around 4 neural networks
-- GRU has 2 gates around 3 neural networks
-- LSTM has better long term memory due to more gates
-- LSTM requires slightly more computation than GRU
+## Candidate Hidden State \(\tilde{h}_t\)
+
+The **Candidate Hidden State** is a proposed new hidden state which is similar to what we *could* set \(h_t\) to:
+
+$$\tilde{h}_t = \tanh(W_{xh} x_t + W_{hh}(r_t \odot h_{t-1}) + b_h)$$
+
+1. Current input \(x_t\) is projected by \(W_{xh}\)
+2. Previous hidden state \(h_{t-1}\), **gated by** \(r_t\) (element-wise), is projected by \(W_{hh}\)
+3. Sum both projections, add bias \(b_h\), apply **tanh** --> output in \((-1, 1)\)
+
+The reset gate determines how much of \(h_{t-1}\) shapes this candidate.
+
+---
+
+## Gate 2: Update Gate \(z_t\) --> Final Hidden State \(h_t\)
+
+The **Update Gate** decides how much of the *candidate* to accept vs. how much of the *old* hidden state to carry forward:
+
+$$z_t = \sigma(W_{xz} x_t + W_{hz} h_{t-1} + b_z)$$
+
+$$h_t = z_t \odot \tilde{h}_t + (1 - z_t) \odot h_{t-1}$$
+
+- \(z_t \approx 1\): take mostly from the candidate (new information wins)
+- \(z_t \approx 0\): keep mostly the old hidden state (memory is preserved)
+
+The final \(h_t\) is a **weighted blend** of the old memory and the new candidate, controlled entirely by \(z_t\).
+
+---
+
+## GRU vs. LSTM
+
+| | LSTM | GRU |
+|---|---|---|
+| Gates | Forget, Input, Output | Reset, Update |
+| Internal networks | 4 | 3 |
+| Long-term memory | Better (explicit cell state) | Good |
+| Computation cost | Higher | **Lower** |
+| When to use | Long sequences, complex dependencies | Faster training, comparable results |

@@ -1,120 +1,118 @@
-# Squeeze and Excitation Block (SE)
+# Squeeze-and-Excitation (SE) Block
 
-## CNNs: Two Key Structural Assumptions
+An **SE Block** is a lightweight plug-in module that recalibrates a CNN's feature maps by learning *which channels are most important* for a given input. Rather than treating all channels equally, it dynamically re-weights them.
 
-Before understanding SE Blocks, it helps to know what CNNs assume about images:
-
-| Assumption | Meaning |
-|---|---|
-| **Local patterns** | Meaningful features (edges, eyes) are made of nearby pixels — a small filter (e.g. 3×3) is sufficient |
-| **Translation equivariance** | A vertical edge looks the same wherever it appears — the same filter weights are shared across all positions |
-
-These two assumptions drastically reduce parameters compared to a fully-connected network applied directly to pixels.
-
+---
 
 ## Introduction
 
-- after a CNN processes an image, it produces a stack of feature maps, one map per filter (kernel)
-- CNN treats all feature maps as **equally important**
-- this is where the **Squeeze and Excitation Block** comes in
-- it is an attachment used to bias certain convolutional channels (filters/kernels)
-- meaning it decides which channels we should trust more than the other
+After a CNN processes an image, it produces a stack of feature maps (channel), one per filter (kernel). By default, the CNN treats **all feature maps as equally important**, regardless of the input.
 
-## How it works
+The SE Block changes this: it looks at the overall response of each channel and produces a set of **importance scores** (one per channel) that are multiplied back into the feature maps. Channels deemed important are amplified and less useful ones are suppressed.
 
-- a typical SE block contains of 3 steps: Squeeze, Excitation, Scale
+---
 
-### Squeeze
+## Background: CNN Assumptions
 
-- each feature map is a 2D spatial grid (e.g. 7x7 pixels)
-- Squeeze performs **Global Average Pooling** which takes each channel and compresses it down to a single number by averaging all the pixels of that particular channel
+SE Blocks are designed to augment CNNs, so we need to understand what CNNs assume:
 
-### Excitation
+| Assumption | Meaning |
+|---|---|
+| **Local patterns** | Meaningful features (edges, eyes) are made of nearby pixels, a small filter (e.g. 3×3) is sufficient |
+| **Translation equivariance** | A vertical edge looks the same wherever it appears, the same filter weights are shared across all positions |
 
-- assuming we have a total of X number of channels, we have X numbers of max pools
-- the vector of X numbers is passed through a **2-layer fully connected network** with a bottleneck (such as shrinking it to smaller than X, and then expand back to X)
-- this is then followed by a sigmoid function
-- output is a vector of X values, each between 0 and 1, representing them as *importance scores per channel*
-- the bottleneck forces the network to learn compressed generalised relationships between channels rather than memorising
+These assumptions drastically reduce parameters, but they also mean the CNN has **no mechanism to adapt channel importance per input**. SE Blocks allows us to add importance to channels.
 
-### Scale
+---
 
-- each channel's feature map is multiplied by its importance score
-- channels with a score near 1 passes through strongly while those channels with scores near 0 gets suppressed
+## How It Works
 
+An SE Block consists of three steps: **Squeeze → Excitation → Scale**.
 
-### Worked Example (4 Channels)
+### 1. Squeeze
 
-After Squeeze, say you have:
+Compress each 2D feature map down to a **single number** using Global Average Pooling:
 
-```text
+```
+Input:  (H × W × C)  feature maps
+Output: (C,)          one summary value per channel
+```
+
+This gives a compact descriptor of what each channel "detected" across the entire spatial extent.
+
+### 2. Excitation
+
+Pass the `C`-dimensional vector through a **two-layer fully-connected network** with a bottleneck:
+
+```
+(C,)  →  FC + ReLU  →  (C/r,)  →  FC + Sigmoid  →  (C,) importance scores
+```
+
+- **Bottleneck** of reduction ratio `r` (typically 16) forces the network to learn compressed, generalised channel relationships
+- **Sigmoid** output where each score lies in `(0, 1)` which acts as a soft gate per channel
+
+### 3. Scale
+
+Multiply each channel's feature map element-wise by its importance score:
+
+```
+Output = Input  ×  importance scores    (broadcast across spatial dims)
+```
+
+- Score ≈ 1 means channel passes through strongly
+- Score ≈ 0 means channel is suppressed
+
+---
+
+## Worked Example (4 Channels)
+
+After Squeeze, the summary vector is:
+
+```
 s = [0.9,  0.1,  0.7,  0.3]
 ```
 
-**Layer 1 (W₁, shape [2×4]):**
+**Layer 1 — FC + ReLU (C=4 --> C/r=2):**
 
-```text
+```
 W₁ = [[ 0.8, -0.5,  0.3,  0.1],
       [-0.2,  0.9, -0.4,  0.6]]
 
-W₁ · s = [0.91, -0.19]
-
-After ReLU: h = [0.91, 0.0]
+W₁ · s = [0.91, -0.19]   →  After ReLU: h = [0.91, 0.0]
 ```
 
-**Layer 2 (W₂, shape [4×2]):**
+**Layer 2 — FC + Sigmoid (C/r=2 --> C=4):**
 
-```text
+```
 W₂ = [[ 0.6,  0.3],
       [ 0.1,  0.8],
       [ 0.9, -0.2],
       [-0.1,  0.5]]
 
-W₂ · h = [0.55, 0.09, 0.82, -0.09]
-
-After Sigmoid: scores = [0.63, 0.52, 0.69, 0.48]
+W₂ · h = [0.55, 0.09, 0.82, -0.09]   →  After Sigmoid: [0.63, 0.52, 0.69, 0.48]
 ```
 
-Channel 3 (score 0.69) is amplified most; Channel 4 (score 0.48) is suppressed most.
+Channel 3 (score **0.69**) is amplified most whereas Channel 4 (score **0.48**) is suppressed most.
 
 ---
 
-### Full SE Block Architecture
+## Why the Bottleneck?
 
-```text
-Input Feature Maps (H × W × C)
-        ↓
-   [SQUEEZE] Global Average Pool → (1 × 1 × C) vector
-        ↓
-   [EXCITATION] FC → ReLU → FC → Sigmoid → C importance scores
-        ↓
-   [SCALE] Multiply scores back into original feature maps
-        ↓
-Output Feature Maps (H × W × C)   ← same shape, re-weighted
-```
-
-The output shape is identical to the input — SE Blocks are a **plug-in module** that can be inserted into any existing CNN architecture (e.g. ResNet) with minimal overhead.
-
----
-
-### Why the Bottleneck in Excitation?
-
-A single `[C × C]` FC layer would have C² parameters (e.g. 256² = 65,536). The bottleneck (shrink to r, expand back) gives only $2 \times C \times r$ parameters:
+Without a bottleneck, the excitation would need a `C × C` FC layer:
 
 | Approach | Parameters (C=256, r=16) |
 |---|---|
-| Single FC layer (256→256) | 65,536 |
-| Bottleneck (256→16→256) | 8,192 |
+| Single FC (256 → 256) | 65,536 |
+| Bottleneck (256 → 16 → 256) | **8,192** — 8× fewer |
 
-**8× fewer parameters** — reducing overfitting and forcing the network to learn compressed, generalised channel relationships rather than memorising noise.
+The bottleneck forces the network to learn **generalised** channel relationships rather than memorising, and dramatically cuts parameter count. This also reduces overfitting.
 
 ---
 
-### SE Blocks vs Standard CNN
+## SE Block vs. Standard CNN
 
-| | Standard CNN Layer | CNN + SE Block |
+| | Standard CNN | CNN + SE Block |
 |---|---|---|
-| Channel weighting | Equal for all | Dynamic, input-dependent |
-| Parameters added | — | Small (bottleneck FC) |
+| Channel weighting | Equal for all inputs | Dynamic (depends on the input) |
+| Extra parameters | — | Small (two FC layers in bottleneck) |
 | Representation | Static | Content-aware |
-| Analogy | Treating all instruments at equal volume | A mixing engineer adjusting the balance per song |

@@ -1,4 +1,4 @@
-# Fully-Connected Networks & Squeeze-and-Excitation Blocks
+# Neurons in Fully-Connected Networks
 
 ## What Is a Fully-Connected (FC) Layer?
 
@@ -8,15 +8,18 @@ A **Fully-Connected (FC) layer** is the most fundamental building block of neura
 
 A single neuron takes inputs, multiplies each by a learned **weight**, sums them, and passes the result through an **activation function**:
 
-Given:
+*Given:*
+
 - Input: `x = [2, 3, 1]`
 - Weights: `w = [0.5, -0.4, 0.8]`
 
-The neuron computes:
+*The neuron computes:*
 
 $$z = (2 \times 0.5) + (3 \times -0.4) + (1 \times 0.8) = 0.6$$
 
-After ReLU: output = **0.6**
+*After ReLU:*
+
+output = **0.6**
 
 ### Many Neurons in Parallel = FC Layer
 
@@ -35,7 +38,7 @@ $$\mathbf{h} = \text{activation}(W \cdot \mathbf{x} + \mathbf{b})$$
 
 Where `W` is a weight matrix of shape `[outputs × inputs]` and `b` is a bias vector.
 
-### A Fully-Connected Network = Multiple Layers Stacked
+### A Fully-Connected Network = Multiple FC Layers Stacked
 
 ```text
 Input → [FC Layer 1 + ReLU] → [FC Layer 2 + ReLU] → [FC Layer 3 + Sigmoid] → Output
@@ -45,11 +48,13 @@ Each layer builds higher-level abstractions on top of the previous layer's outpu
 
 ---
 
-### Why Activation Functions Matter
+### Activation Functions
 
-Without activation functions between layers, stacking multiple FC layers collapses to a single linear transformation:
+Stacking multiple FC layers without Activation Functions collapses them to a single linear transformation:
 
 $$W_2(W_1 \mathbf{x}) = (W_2 W_1)\mathbf{x} = W_{\text{combined}} \mathbf{x}$$
 
-Two layers without activation = one layer. Activations like **ReLU** introduce non-linearity, allowing the network to learn complex, curved decision boundaries.
+- Two FC layers without activation results in one layer
+
+- Activations like **ReLU** introduce non-linearity, allowing the network to learn complex, curved decision boundaries
 

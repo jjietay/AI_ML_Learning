@@ -1,60 +1,109 @@
-# Long Short Term Memory (LSTM)
+# Long Short-Term Memory (LSTM)
 
-## Recap of RNN
+LSTMs are a specialised type of RNN designed to solve the **vanishing gradient / short-term memory** problem. They introduce a separate **cell state** which is like a "memory highway" that can carry information across many timesteps with minimal degradation.
 
-- words get transformed into machine readable vectors
-- process one by one
-- while processsing the words, it passes previous hidden state (memory) into next step of the sequence
-- hidden state acts at NN memory
-- input + hidden state combined to from vector
-- vector goes through tanh activation
-- tanh squeeze values between -1 to 1, thus regulating NN values
-
-## LSTM
 ---
+
+## Why we don't use RNN
+
+In a standard RNN, the hidden state at step \(t\) is:
+
+$$h_t = \tanh(W_{xh} x_t + W_{hh} h_{t-1} + b_h)$$
+
+| RNN Mechanism | Problem |
+|---|---|
+| Words --> vectors | Fine |
+| Process one-by-one, passing hidden state | Hidden state gets **overwritten** each step |
+| tanh squeezes values to \((-1, 1)\) | Repeated squashing causes **vanishing gradients** |
+| Early inputs far from the output | The network "forgets" them |
+
+LSTMs fix this by keeping a separate **cell state** \(C_t\) that bypasses the squashing operations.
+
+---
+
+## LSTM Architecture
+
 ![LSTM diagram](../assets/images/lstm_img1-.png)
 
-### Cell State
+Main concept is that the LSTM cell has **two parallel flows**:
 
-- acts as a transport highway that transports information all the way down to the sequence chain
-- something like memory of the network
-- since it can carry information throughout the sequence processing, information from the earlier timestep can be carried all the way to the last time step
-- therefore reducing the effects of short term memory
+- **Cell state** \(C_t\): the long-term memory highway (modified by gates, not a full overwrite)
+- **Hidden state** \(h_t\): the short-term output passed to the next timestep and to the prediction head
 
-### Gates
+---
 
-- information gets added or removed from the call states via gates (as it moves from through timesteps)
-- gates are just different neural network that decides which information is allowed on the cell states
-- it learns which information is important to prevent the model from forgetting it during training
-- gates contains sigmoid activation functions
-- similar to the tanh, but it squeezes values to 0 to 1
-- values that multiply with 0 is still 0
-- this means that information that was deemed not important will remain unimportant while passing through timesteps
+## Cell State
 
-#### 1) Forget Gate
+The **cell state** acts as a transport highway through the sequence:
 
-- decides what information should be thrown or kept
-- information from previous hidden state and information from current input is passed through the sigmoid function
-- values come out between 0 to 1 (values closer to 0 we throw, values closer to 1 we keep)
+```
+C_{t-1}  →  [Forget Gate]  →  [Input Gate adds new info]  →  C_t
+```
 
-#### 2) Input Gate
+Information can be **added** or **removed** from the cell state at each step via gates, but it is never fully replaced, therefore making it easy for the network to retain information from many timesteps ago.
 
-- to update the cell state we have the input gate
-- we pass the previous hidden state and the current input put into a sigmoid function and a tanh function seperately (in parallel)
-- sigmoid function decides which values will be updated by transforming values from 0 to 1
-- tanh function squeezes values from -1 to 1
-- we then multiply both tanh output and the sigmoid output together
-- sigmoid output will decide which information is important to keep from the tanh output
-- cell state is multiplied by the Forget Vector
-- possibility of dropping values in a cell state if it gets mulitplied by values near 0
-- we take the output from Input Gate and do a addition to update Cell State to new values
+---
 
-#### 3) Output Gate
+## Gates
 
-- output gate decides what the next hidden state should be
-- we pass the previous hidden state and the input into a sigmoid function
-- then we pass newly modified cell state to the tanh function
-- we multiply the sigmoid output with the tanh output to decide what information the hidden state should carry
-- the output is the hidden state
-- the new cell state and the new hidden state is then carried over to the next time step
+LSTM uses **three gates**, each implemented as a small neural network with a **sigmoid activation**:
 
+$$\text{gate output} = \sigma(W_x x_t + W_h h_{t-1} + b) \in (0, 1)$$
+
+- Output near **0** → gate is closed (block information)
+- Output near **1** → gate is open (allow information through)
+
+---
+
+### Gate 1: Forget Gate
+
+> *"What should we erase from the cell state?"*
+
+$$f_t = \sigma(W_{xf} x_t + W_{hf} h_{t-1} + b_f)$$
+
+1. Takes previous hidden state \(h_{t-1}\) + current input \(x_t\)
+2. Outputs a value in \((0, 1)\) per cell-state dimension
+3. Multiplied element-wise with \(C_{t-1}\) where values near 0 are erased, while values near 1 are kept
+
+---
+
+### Gate 2: Input Gate
+
+> *"What new information should we write to the cell state?"*
+
+Two parallel operations:
+
+$$i_t = \sigma(W_{xi} x_t + W_{hi} h_{t-1} + b_i)  \quad \text{(what to update)}$$
+
+$$\tilde{C}_t = \tanh(W_{xc} x_t + W_{hc} h_{t-1} + b_c)  \quad \text{(candidate values)}$$
+
+Combined cell state update:
+
+$$C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$
+
+- \(f_t \odot C_{t-1}\): old memory, partially forgotten
+- \(i_t \odot \tilde{C}_t\): new information, selectively written
+
+---
+
+### Gate 3: Output Gate
+
+> *"What part of the cell state should we expose as the hidden state?"*
+
+$$o_t = \sigma(W_{xo} x_t + W_{ho} h_{t-1} + b_o)$$
+
+$$h_t = o_t \odot \tanh(C_t)$$
+
+1. `tanh(C_t)` squashes the cell state to \((-1, 1)\)
+2. The output gate `o_t` selectively exposes parts of it as the new hidden state
+3. Both \(C_t\) and \(h_t\) are passed to the next timestep
+
+---
+
+## Summary: Information Flow
+
+| Gate | Controls | Key operation |
+|---|---|---|
+| **Forget** \(f_t\) | What to erase from \(C_{t-1}\) | \(f_t \odot C_{t-1}\) |
+| **Input** \(i_t\) | What new info to write to \(C_t\) | \(i_t \odot \tilde{C}_t\) |
+| **Output** \(o_t\) | What portion of \(C_t\) becomes \(h_t\) | \(o_t \odot \tanh(C_t)\) |
