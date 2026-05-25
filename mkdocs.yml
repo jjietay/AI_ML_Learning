@@ -27,6 +27,8 @@ nav:
       - Ensemble: theory/ensemble.md
     - Convolutional Networks:
       - CNN: theory/2_cnn.md
+      - VGG: theory/vgg.md
+      - ResNet: theory/resnet.md
       - SE Block: theory/3_se_block.md
     - Sequence Models:
       - RNN: theory/5_rnn.md
