@@ -25,27 +25,24 @@ nav:
       - Vanishing Gradients: theory/vanishing_grad.md
       - "Dropout & Coadaptation": theory/4_dropout_coadaptation.md
       - Ensemble: theory/ensemble.md
-
     - Convolutional Networks:
       - CNN: theory/2_cnn.md
       - SE Block: theory/3_se_block.md
-
     - Sequence Models:
       - RNN: theory/5_rnn.md
       - LSTM: theory/lstm.md
       - GRU: theory/gru.md
-
     - Generative Models:
       - GAN: theory/gan.md
-
+      - U-Net: theory/unet.md
+      - Ada_LN-Zero: theory/adaln_zero.md
+      - DiT: theory/dit.md
     - "Attention & Transformers":
       - "Transformers & Attention": theory/6_transformers_attention.md
       - BERT: theory/bert.md
-
     - Vision Transformers:
       - ViT: theory/vit.md
       - Swin Transformer: theory/swin_transformer.md
-      - DiT: theory/dit.md
 
 plugins:
   - search
