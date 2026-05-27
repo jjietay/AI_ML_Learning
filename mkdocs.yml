@@ -41,6 +41,7 @@ nav:
       - DiT: theory/dit.md
     - "Attention & Transformers":
       - "Transformers & Attention": theory/6_transformers_attention.md
+      - Transformer Architecture: theory/transfomers.md
       - BERT: theory/bert.md
     - Vision Transformers:
       - ViT: theory/vit.md
