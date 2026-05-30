@@ -1,6 +1,6 @@
 # Vision Transformer (ViT)
 
-**Vision Transformers (ViT)** apply the Transformer architecture — originally designed for text — directly to images. Instead of treating an image as a grid of pixels processed by convolutions, ViT splits the image into a sequence of fixed-size patches and treats each patch like a word token.
+**Vision Transformers (ViT)** apply the Transformer architecture that is originally designed for text directly to images. Instead of treating an image as a grid of pixels processed by convolutions, ViT splits the image into a sequence of fixed-size patches and treats each patch like a word token.
 
 ## CNN vs. ViT at a Glance
 
@@ -25,7 +25,7 @@ The input image is divided into a grid of non-overlapping **16×16 patches**:
 
 ### 2. Patch Embeddings
 
-Each flattened patch is projected into an **embedding vector** via a learned linear layer — analogous to word embeddings in NLP:
+Each flattened patch is projected into an **embedding vector** via a learned linear layer which is analogous to word embeddings in NLP:
 
 ```
 Patch (768,) → Linear layer → Embedding (D,)
@@ -45,8 +45,8 @@ Final input = Patch Embedding + Positional Embedding
 
 The sequence of embeddings passes through multiple **Transformer encoder blocks**, each containing:
 
-1. **Multi-head self-attention** — every patch attends to every other patch, capturing global relationships
-2. **MLP / FFN** — applied per patch independently
+1. **Multi-head self-attention**: every patch attends to every other patch, capturing global relationships
+2. **MLP / FFN**: applied per patch independently
 
 This is where ViT gets its **Global Receptive Field**: every patch can directly influence every other patch, regardless of spatial distance.
 
@@ -65,4 +65,4 @@ After all encoder blocks:
 
 ## Why the Global Receptive Field Matters
 
-CNNs classify images based on **textures** (local patterns), which can sometimes lead to incorrect predictions if a texture is present in the wrong context. ViT, by attending globally from the very first layer, tends to focus on **object shape** — which is generally a more robust feature for recognition.
+CNNs classify images based on **textures** (local patterns), which can sometimes lead to incorrect predictions if a texture is present in the wrong context. ViT, by attending globally from the very first layer, tends to focus on **object shape** which is generally a more robust feature for recognition.
