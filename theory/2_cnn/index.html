@@ -1,0 +1,2264 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://jjietay.github.io/AI_ML_Learning/theory/2_cnn/">
+      
+      
+        <link rel="prev" href="../ensemble/">
+      
+      
+        <link rel="next" href="../vgg/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>CNN - AI/ML Learning Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#convolutional-neural-networks-cnns" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Learning Notes" class="md-header__button md-logo" aria-label="AI/ML Learning Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Learning Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CNN
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Learning Notes" class="md-nav__button md-logo" aria-label="AI/ML Learning Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Learning Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1_neuron/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuron
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7_multilayer_perceptrons/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multilayer Perceptrons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8_relu_gated/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ReLU & Gated
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanishing_grad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vanishing Gradients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4_dropout_coadaptation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dropout & Coadaptation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ensemble/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ensemble
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convolutional Networks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Convolutional Networks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CNN
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-convolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Convolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Convolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-channels-tensors-and-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Channels, Tensors, and Shapes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Channels, Tensors, and Shapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Channels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Channels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-key-hyperparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Key Hyperparameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Key Hyperparameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-shape-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Shape Formula
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-shape-walk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Shape Walk
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Pooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-activation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Activation Functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-batch-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Batch Normalization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-the-standard-cnn-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. The Standard CNN Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-feature-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Feature Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-receptive-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Receptive Field
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-residual-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Residual Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-squeeze-and-excitation-channel-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Squeeze-and-Excitation: Channel Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Squeeze-and-Excitation: Channel Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-a-concrete-architecture-resnet-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. A Concrete Architecture: ResNet-50
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-training-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Training Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-where-to-look-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Where to Look Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-tensor-shape-cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference: Tensor Shape Cheat Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vgg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VGG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ResNet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3_se_block/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SE Block
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sequence Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sequence Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5_rnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lstm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gru/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GRU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U-Net
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adaln_zero/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ada_LN-Zero
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DiT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Attention & Transformers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6_transformers_attention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformers & Attention
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transfomers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformer Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BERT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vision Transformers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vision Transformers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ViT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../swin_transformer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Swin Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-convolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Convolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Convolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-channels-tensors-and-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Channels, Tensors, and Shapes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Channels, Tensors, and Shapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Channels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Channels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-key-hyperparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Key Hyperparameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Key Hyperparameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-shape-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Shape Formula
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-shape-walk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Shape Walk
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Pooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-activation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Activation Functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-batch-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Batch Normalization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-the-standard-cnn-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. The Standard CNN Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-feature-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Feature Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-receptive-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Receptive Field
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-residual-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Residual Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-squeeze-and-excitation-channel-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Squeeze-and-Excitation: Channel Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Squeeze-and-Excitation: Channel Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-a-concrete-architecture-resnet-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. A Concrete Architecture: ResNet-50
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-training-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Training Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-where-to-look-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Where to Look Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-tensor-shape-cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference: Tensor Shape Cheat Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="convolutional-neural-networks-cnns">Convolutional Neural Networks (CNNs)<a class="headerlink" href="#convolutional-neural-networks-cnns" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduction">1. Introduction<a class="headerlink" href="#1-introduction" title="Permanent link">&para;</a></h2>
+<p>Images contain enormous redundancy. A photo of a cat has the same "catness" whether the cat is in the top-left or bottom-right of the frame. A fully connected (FC) network treating the image as a flat vector of pixels would need to learn "what a cat looks like" separately for every possible position. This is wasteful and doesn't generalize.</p>
+<p>CNNs makes 2 assumptions (that is crucial to identify if its useful for a specific use case):</p>
+<ol>
+<li>
+<p><strong>Local patterns</strong>
+    meaningful visual features (an edge, a curve, an eye) are made of pixels that are physically close together in the image.</p>
+</li>
+<li>
+<p><strong>Translation equivariance</strong> </p>
+</li>
+</ol>
+<p>A vertical edge in the top left corner of an image looks identical to a vertical edge in the bottom right corner. The pattern itself doesn't change based on where it appears.</p>
+<h2 id="2-convolution">2. Convolution<a class="headerlink" href="#2-convolution" title="Permanent link">&para;</a></h2>
+<p>A <strong>filter</strong> (also called a <strong>kernel</strong>) is a small grid of learnable weights that are typically 3×3 or 5×5. To apply it to an image, you slide it across every position, and at each position you compute the elementwise product of the filter and the underlying image patch, then sum the result.</p>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>Suppose your filter is a 3×3 vertical edge detector:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>-1   0   1
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>-1   0   1
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>-1   0   1
+</code></pre></div>
+<p>And you place it on this 3×3 image patch:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>10  50   90
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>20  60  100
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>30  70  110
+</code></pre></div>
+<p>The output for this position is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>(-1×10 + 0×50 + 1×90)  =  80
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>(-1×20 + 0×60 + 1×100) =  80
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>(-1×30 + 0×70 + 1×110) =  80
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>───────────────────────────
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                        240
+</code></pre></div>
+<p>A large positive output means "vertical edge with bright right side". This means that the pixels on the right of the patch are much brighter than pixels on the left. Slide this filter across every position of the image and you get a 2D map of vertical-edge responses across the entire image. <strong>That output map is one channel of the layer's output.</strong></p>
+<h3 id="filter">Filter<a class="headerlink" href="#filter" title="Permanent link">&para;</a></h3>
+<p>When the input has multiple channels (e.g. 3 for RGB, or 64 for a deeper feature map), filters are 3D: shape <code>(k, k, C_in)</code>, where <code>C_in</code> matches the input channel count. The filter sees all input channels at once and linearly combines them.</p>
+<p>If a conv layer has <code>C_out</code> filters, each one independently slides over the input and produces one 2D output map. Stacking those gives an output of shape <code>(H', W', C_out)</code>. The total trainable parameters in this layer:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>params = k × k × C_in × C_out  (+ C_out biases, if used)
+</code></pre></div>
+<hr />
+<h2 id="3-channels-tensors-and-shapes">3. Channels, Tensors, and Shapes<a class="headerlink" href="#3-channels-tensors-and-shapes" title="Permanent link">&para;</a></h2>
+<p>A CNN's bread and butter is keeping track of tensor shapes. The two common axis-ordering conventions:</p>
+<ul>
+<li><strong>Channels-last (TensorFlow / Keras)</strong>: <code>(B, H, W, C)</code></li>
+<li><strong>Channels-first (PyTorch)</strong>: <code>(B, C, H, W)</code></li>
+</ul>
+<p>Where <code>B</code> is batch size, <code>H</code> and <code>W</code> are spatial dimensions, and <code>C</code> is channels.</p>
+<h3 id="input-channels">Input Channels<a class="headerlink" href="#input-channels" title="Permanent link">&para;</a></h3>
+<ul>
+<li>RGB image: <code>C = 3</code></li>
+<li>Grayscale image or spectrogram: <code>C = 1</code></li>
+<li>Multi-band or hyperspectral image: <code>C</code> can be much larger</li>
+</ul>
+<h3 id="output-channels">Output Channels<a class="headerlink" href="#output-channels" title="Permanent link">&para;</a></h3>
+<p>After a conv layer, each output channel is the response map of one filter. So if you want detectors for "edges, corners, color blobs, textures, …", you use one filter per pattern. Modern networks use anywhere from 32 to 2048 filters per layer.</p>
+<p>Channels at deeper layers represent <strong>increasingly abstract features</strong>. Early layers learn edges and color blobs. Middle layers combine those into textures and parts (eyes, wheels). Deep layers combine parts into whole-object concepts.</p>
+<hr />
+<h2 id="4-key-hyperparameters">4. Key Hyperparameters<a class="headerlink" href="#4-key-hyperparameters" title="Permanent link">&para;</a></h2>
+<p>Four hyperparameters fully control a conv layer's behavior:</p>
+<table>
+<thead>
+<tr>
+<th>Hyperparameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Kernel size</strong> (<code>k</code>)</td>
+<td>How much spatial context each filter sees. 3×3 is by far the most common.</td>
+</tr>
+<tr>
+<td><strong>Number of filters</strong> (<code>C_out</code>)</td>
+<td>How many output channels (i.e., feature detectors) the layer produces.</td>
+</tr>
+<tr>
+<td><strong>Stride</strong> (<code>s</code>)</td>
+<td>How many positions the filter jumps between applications. Stride 1 = dense, stride 2 = halves spatial size.</td>
+</tr>
+<tr>
+<td><strong>Padding</strong> (<code>p</code>)</td>
+<td>Zeros added around the input border so the filter can "hang off" the edge.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output-shape-formula">Output Shape Formula<a class="headerlink" href="#output-shape-formula" title="Permanent link">&para;</a></h3>
+<p>For one spatial dimension:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>out = floor((in + 2p − k) / s) + 1
+</code></pre></div>
+<p>Two common padding modes:</p>
+<ul>
+<li><strong>"Valid"</strong> (<code>p = 0</code>) — filter cannot hang off the edge; output is smaller than input.</li>
+<li><strong>"Same"</strong> — padding is set automatically so that <code>out = ceil(in / s)</code>. With stride 1, output spatial size equals input spatial size.</li>
+</ul>
+<h3 id="example-shape-walk">Example Shape Walk<a class="headerlink" href="#example-shape-walk" title="Permanent link">&para;</a></h3>
+<p>Starting from a 224×224 RGB image, input shape <code>(224, 224, 3)</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Conv 3×3, 64 filters,  stride 1, same  →  (224, 224, 64)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Conv 3×3, 64 filters,  stride 2, same  →  (112, 112, 64)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Max pool 2×2,          stride 2        →  ( 56,  56, 64)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Conv 3×3, 128 filters, stride 1, same  →  ( 56,  56, 128)
+</code></pre></div>
+<p>The general pattern: each layer either preserves or downsamples spatial dimensions, while channel depth tends to grow.</p>
+<hr />
+<h2 id="5-pooling">5. Pooling<a class="headerlink" href="#5-pooling" title="Permanent link">&para;</a></h2>
+<p>A <strong>pooling layer</strong> downsamples a feature map without learning anything. Two common types:</p>
+<ul>
+<li><strong>Max pooling</strong> — Output is the maximum value in each window. Detects "is this feature present anywhere in this region?"</li>
+<li><strong>Average pooling</strong> — Output is the mean of each window. Smoother summary.</li>
+</ul>
+<p>A typical pool layer uses a 2×2 window with stride 2, halving both spatial dimensions. The channel dimension is untouched, and there are no learnable parameters.</p>
+<p><strong>Global average pooling (GAP)</strong> is a special case where the window covers the entire spatial extent, collapsing <code>(H, W, C)</code> down to <code>(C,)</code> — one number per channel. GAP is what the squeeze step of an SE block does. It's also commonly used right before the classification head in modern CNNs, replacing the parameter-heavy fully-connected layers of older designs.</p>
+<hr />
+<h2 id="6-activation-functions">6. Activation Functions<a class="headerlink" href="#6-activation-functions" title="Permanent link">&para;</a></h2>
+<p>After each conv layer, an activation function adds nonlinearity. Without nonlinearity, stacking conv layers would be equivalent to a single linear transformation, and depth would buy you nothing.</p>
+<ul>
+<li><strong>ReLU</strong> — <code>f(x) = max(0, x)</code>. Simple, fast, the default for most CNNs.</li>
+<li><strong>Leaky ReLU</strong> — <code>f(x) = max(αx, x)</code> for small <code>α</code> (e.g. 0.01). Fixes "dying ReLU" where some neurons output zero forever.</li>
+<li><strong>GELU, SiLU/Swish</strong> — Smoother variants used in newer architectures.</li>
+</ul>
+<hr />
+<h2 id="7-batch-normalization">7. Batch Normalization<a class="headerlink" href="#7-batch-normalization" title="Permanent link">&para;</a></h2>
+<p>After conv (and before activation, typically), modern CNNs insert a <strong>batch normalization (BN)</strong> layer. BN normalizes each channel's activations to have zero mean and unit variance across the batch, then learns a per-channel scale and shift. This stabilizes training and lets you use higher learning rates.</p>
+<p>The canonical building block in a modern CNN is the <strong>conv → BN → ReLU</strong> stack:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>x  →  Conv  →  BatchNorm  →  ReLU  →  output
+</code></pre></div>
+<hr />
+<h2 id="8-the-standard-cnn-pattern">8. The Standard CNN Pattern<a class="headerlink" href="#8-the-standard-cnn-pattern" title="Permanent link">&para;</a></h2>
+<p>A typical CNN for image classification follows this overall pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Input (H, W, 3)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>   ↓
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Stage 1: a few [Conv-BN-ReLU] blocks, then downsample
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>   ↓  (H/2, W/2, 64)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Stage 2: more blocks, more channels, downsample
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>   ↓  (H/4, W/4, 128)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Stage 3: more blocks, more channels, downsample
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>   ↓  (H/8, W/8, 256)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>Stage 4: more blocks, more channels, downsample
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>   ↓  (H/16, W/16, 512)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>   ↓
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>Global Average Pool  →  (512,)
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>   ↓
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>Fully Connected      →  (num_classes,)
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>   ↓
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>Softmax              →  probabilities
+</code></pre></div>
+<p>The principle is: <strong>spatial dimensions shrink while channel depth grows</strong>. Information is being compressed in space and expanded in feature richness. By the final stage, each of the 512 channels represents a complex high-level pattern — "dog face seen from the front," "wheel from the side" — and there's not much spatial layout left to preserve.</p>
+<hr />
+<h2 id="9-feature-hierarchy">9. Feature Hierarchy<a class="headerlink" href="#9-feature-hierarchy" title="Permanent link">&para;</a></h2>
+<p>What each layer learns is determined entirely by training. But empirically, the same hierarchy emerges in almost every CNN trained on natural images:</p>
+<table>
+<thead>
+<tr>
+<th>Depth</th>
+<th>What the channels represent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Layer 1–2</td>
+<td>Oriented edges, color blobs, simple gradients</td>
+</tr>
+<tr>
+<td>Layer 3–4</td>
+<td>Corners, T-junctions, simple textures (stripes, dots)</td>
+</tr>
+<tr>
+<td>Layer 5–8</td>
+<td>Object parts — wheels, eyes, fur patches, text-like shapes</td>
+</tr>
+<tr>
+<td>Layer 9+</td>
+<td>Whole-object detectors — specific breeds, models, scenes</td>
+</tr>
+</tbody>
+</table>
+<p>This hierarchy is why CNNs trained on large datasets like ImageNet <strong>transfer so well</strong> to other tasks. The early layers learn generic visual primitives that any image task can reuse.</p>
+<hr />
+<h2 id="10-receptive-field">10. Receptive Field<a class="headerlink" href="#10-receptive-field" title="Permanent link">&para;</a></h2>
+<p>The <strong>receptive field</strong> of a neuron is the region of the original input that can influence its value. A neuron in the first conv layer with a 3×3 kernel has a receptive field of 3×3. Stack two such layers and the receptive field grows to 5×5 (each second-layer neuron sees a 3×3 window of first-layer outputs, each of which sees a 3×3 image patch). Stack more and it keeps growing. Add stride or pooling and it grows much faster.</p>
+<p>By the final layer of a deep network, individual neurons effectively "see" the entire input image. This is why deep networks can detect whole objects: by the time information has flowed through enough layers, each neuron's receptive field is large enough to span an entire object.</p>
+<hr />
+<h2 id="11-residual-connections">11. Residual Connections<a class="headerlink" href="#11-residual-connections" title="Permanent link">&para;</a></h2>
+<p>Very deep networks suffer from <strong>vanishing gradients</strong> — the signal traveling backward through many layers gets attenuated, and early layers stop learning. The fix introduced by ResNet is the <strong>residual connection</strong>: each block computes <code>F(x) + x</code> instead of just <code>F(x)</code>. The identity path lets gradients flow backward unobstructed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>x  →  [Conv-BN-ReLU-Conv-BN]  →  +  →  ReLU  →  out
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>└─────────────────────────────────┘
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>           (identity skip)
+</code></pre></div>
+<p>Residual blocks unlocked depths of 50, 100, even 1000 layers. Almost every modern CNN architecture uses them.</p>
+<hr />
+<h2 id="12-squeeze-and-excitation-channel-attention">12. Squeeze-and-Excitation: Channel Attention<a class="headerlink" href="#12-squeeze-and-excitation-channel-attention" title="Permanent link">&para;</a></h2>
+<p>The <strong>SE block</strong> is a lightweight module that recalibrates channel-wise responses based on the input itself.</p>
+<h3 id="three-steps">Three Steps<a class="headerlink" href="#three-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Squeeze</strong> — Global average pool across spatial dims. Shape <code>(H, W, C) → (C,)</code>. Produces one summary number per channel.</li>
+<li><strong>Excitation</strong> — Two fully connected layers with a bottleneck (<code>C → C/r → C</code>), ending in sigmoid. Produces a vector of <code>C</code> weights, each in <code>(0, 1)</code>.</li>
+<li><strong>Scale</strong> — Broadcast the weight vector across all spatial positions and multiply elementwise with the original input. Shape stays <code>(H, W, C)</code>.</li>
+</ol>
+<p>The block is typically inserted inside a residual branch, between the last conv and the identity addition:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>x  →  [Conv-BN-ReLU-Conv-BN-SE]  →  +  →  ReLU  →  out
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>└─────────────────────────────────────┘
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>              (identity skip)
+</code></pre></div>
+<p>This is the simplest form of attention in vision — letting the network decide <em>per input</em> which channels matter, instead of relying on fixed weights.</p>
+<hr />
+<h2 id="13-a-concrete-architecture-resnet-50">13. A Concrete Architecture: ResNet-50<a class="headerlink" href="#13-a-concrete-architecture-resnet-50" title="Permanent link">&para;</a></h2>
+<p>The canonical modern CNN. Input is <code>(224, 224, 3)</code>. The architecture:</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Operation</th>
+<th>Output Shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stem</td>
+<td>Conv 7×7, stride 2, 64 filters</td>
+<td><code>(112, 112, 64)</code></td>
+</tr>
+<tr>
+<td>Stem</td>
+<td>Max pool 3×3, stride 2</td>
+<td><code>(56, 56, 64)</code></td>
+</tr>
+<tr>
+<td>Stage 1</td>
+<td>3× residual bottleneck blocks</td>
+<td><code>(56, 56, 256)</code></td>
+</tr>
+<tr>
+<td>Stage 2</td>
+<td>4× residual bottleneck blocks, downsample first</td>
+<td><code>(28, 28, 512)</code></td>
+</tr>
+<tr>
+<td>Stage 3</td>
+<td>6× residual bottleneck blocks, downsample first</td>
+<td><code>(14, 14, 1024)</code></td>
+</tr>
+<tr>
+<td>Stage 4</td>
+<td>3× residual bottleneck blocks, downsample first</td>
+<td><code>(7, 7, 2048)</code></td>
+</tr>
+<tr>
+<td>Head</td>
+<td>Global average pool</td>
+<td><code>(2048,)</code></td>
+</tr>
+<tr>
+<td>Head</td>
+<td>Fully connected</td>
+<td><code>(num_classes,)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each "bottleneck block" contains three convs (<code>1×1</code>, <code>3×3</code>, <code>1×1</code>) wrapped in a residual skip. The <code>1×1</code> convs squeeze and then expand the channel count around an expensive <code>3×3</code> conv, keeping compute manageable. Total parameters: ~25 million.</p>
+<p>Add SE blocks inside each residual branch and you get <strong>SE-ResNet-50</strong>, which won the 2017 ImageNet competition.</p>
+<hr />
+<h2 id="14-training-considerations">14. Training Considerations<a class="headerlink" href="#14-training-considerations" title="Permanent link">&para;</a></h2>
+<p>The essentials, briefly:</p>
+<ul>
+<li><strong>Loss function</strong> — Cross-entropy loss for classification. MSE for regression-flavored tasks.</li>
+<li><strong>Optimizer</strong> — SGD with momentum (0.9) or AdamW. Learning rate scheduling matters more than optimizer choice. Cosine decay and warmup are standard.</li>
+<li><strong>Data augmentation</strong> — Random crops, horizontal flips, color jitter. Critical for generalization on small datasets. More aggressive augmentations (MixUp, CutMix, RandAugment) help on large ones.</li>
+<li><strong>Regularization</strong> — Weight decay (L2 on weights), label smoothing, stochastic depth (drop residual blocks at random during training).</li>
+<li><strong>Transfer learning</strong> — For most real-world tasks with limited data, start from a network pre-trained on ImageNet and fine-tune. Training from scratch makes sense only with millions of examples.</li>
+</ul>
+<hr />
+<h2 id="15-where-to-look-next">15. Where to Look Next<a class="headerlink" href="#15-where-to-look-next" title="Permanent link">&para;</a></h2>
+<p>Some directions to explore once the basics feel solid:</p>
+<ul>
+<li><strong>Beyond classification</strong> — Object detection (Faster R-CNN, YOLO), semantic segmentation (U-Net, DeepLab), instance segmentation (Mask R-CNN), keypoint detection.</li>
+<li><strong>Architecture refinements</strong> — EfficientNet, RegNet, ConvNeXt — newer CNN designs that push the accuracy/efficiency frontier.</li>
+<li><strong>Vision transformers (ViT)</strong> — A non-CNN approach using self-attention. Now competitive with or surpassing CNNs at scale, often used in hybrid form.</li>
+<li><strong>Efficient CNNs</strong> — MobileNet, ShuffleNet, GhostNet — designed for phones and edge devices using tricks like depthwise separable convolutions.</li>
+<li><strong>Self-supervised pre-training</strong> — MAE, DINO, SimCLR — learn good features from unlabeled images, then fine-tune on small labeled datasets.</li>
+</ul>
+<p>The convolution itself isn't going anywhere. Most production vision systems still use CNNs or hybrid CNN-transformer architectures because they're efficient, well-understood, and easy to deploy.</p>
+<hr />
+<h2 id="quick-reference-tensor-shape-cheat-sheet">Quick Reference: Tensor Shape Cheat Sheet<a class="headerlink" href="#quick-reference-tensor-shape-cheat-sheet" title="Permanent link">&para;</a></h2>
+<p>For a conv layer with <code>C_in</code> input channels, <code>C_out</code> output channels, kernel <code>k×k</code>, stride <code>s</code>, and "same" padding:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Input shape:           (B, H,           W,           C_in)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Output shape:          (B, ceil(H/s),   ceil(W/s),   C_out)
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Filter shape:          (k, k, C_in, C_out)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Trainable params:      k × k × C_in × C_out  (+ C_out biases)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>FLOPs per forward:     ~ 2 × k × k × C_in × C_out × H_out × W_out × B
+</code></pre></div>
+<p>For a fully connected layer:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Input shape:           (B, in_features)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Output shape:          (B, out_features)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Trainable params:      in_features × out_features  (+ out_features biases)
+</code></pre></div>
+<p>For an SE block with <code>C</code> channels and reduction ratio <code>r</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Input shape:           (B, H, W, C)
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Squeeze output:        (B, C)
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Excitation output:     (B, C)        — values in (0, 1)
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Final output:          (B, H, W, C)  — same as input
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Trainable params:      2 × C² / r  (the two FC layers)
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.top", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

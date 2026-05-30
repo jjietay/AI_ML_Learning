@@ -1,0 +1,2063 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://jjietay.github.io/AI_ML_Learning/theory/swin_transformer/">
+      
+      
+        <link rel="prev" href="../vit/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Swin Transformer - AI/ML Learning Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#swin-transformer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Learning Notes" class="md-header__button md-logo" aria-label="AI/ML Learning Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Learning Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Swin Transformer
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Learning Notes" class="md-nav__button md-logo" aria-label="AI/ML Learning Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Learning Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1_neuron/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuron
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7_multilayer_perceptrons/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multilayer Perceptrons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8_relu_gated/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ReLU & Gated
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanishing_grad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vanishing Gradients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4_dropout_coadaptation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dropout & Coadaptation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ensemble/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ensemble
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convolutional Networks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Convolutional Networks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2_cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vgg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VGG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ResNet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3_se_block/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SE Block
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sequence Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sequence Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5_rnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lstm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gru/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GRU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U-Net
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adaln_zero/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ada_LN-Zero
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DiT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Attention & Transformers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6_transformers_attention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformers & Attention
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transfomers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformer Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BERT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vision Transformers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vision Transformers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ViT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Swin Transformer
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Swin Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#important-terminologies-to-understand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Terminologies to Understand:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Important Terminologies to Understand:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-a-a-times-b-grid-of-windows-refers-to-ab-total-number-of-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (1) A \(A \times B\) grid of windows refers to \(AB\) total number of windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-image-divided-into-a-times-b-patches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (2) $image divided into \(A \times B\) patches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-hierachical-feature-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1: Hierachical Feature Maps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1: Hierachical Feature Maps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-3-and-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2, 3 and 4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-linear-embedding-and-patch-merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2: Linear Embedding and Patch Merging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2: Linear Embedding and Patch Merging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-patch-partition-linear-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1: Patch Partition &amp; Linear Embedding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stages-2-3-4-patch-merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stages 2, 3, 4: Patch Merging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#between-stage-1-and-stage-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Between Stage 1 and Stage 2:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Between Stage 1 and Stage 2:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-concatenate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (1) Concatenate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-downsample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (2) Downsample
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-linear-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (3) Linear Reduction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (4) Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-window-based-self-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3: Window-based Self Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3: Window-based Self Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-w-msa-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How W-MSA works:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Math:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-shifted-window-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4: Shifted Window Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 4: Shifted Window Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-sw-msa-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How SW-MSA works:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#important-terminologies-to-understand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Terminologies to Understand:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Important Terminologies to Understand:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-a-a-times-b-grid-of-windows-refers-to-ab-total-number-of-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (1) A \(A \times B\) grid of windows refers to \(AB\) total number of windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-image-divided-into-a-times-b-patches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (2) $image divided into \(A \times B\) patches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-hierachical-feature-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1: Hierachical Feature Maps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1: Hierachical Feature Maps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-3-and-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2, 3 and 4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-linear-embedding-and-patch-merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2: Linear Embedding and Patch Merging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2: Linear Embedding and Patch Merging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-patch-partition-linear-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1: Patch Partition &amp; Linear Embedding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stages-2-3-4-patch-merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stages 2, 3, 4: Patch Merging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#between-stage-1-and-stage-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Between Stage 1 and Stage 2:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Between Stage 1 and Stage 2:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-concatenate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (1) Concatenate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-downsample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (2) Downsample
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-linear-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (3) Linear Reduction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (4) Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-window-based-self-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3: Window-based Self Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3: Window-based Self Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-w-msa-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How W-MSA works:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Math:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-shifted-window-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4: Shifted Window Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 4: Shifted Window Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-sw-msa-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How SW-MSA works:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="swin-transformer">Swin Transformer<a class="headerlink" href="#swin-transformer" title="Permanent link">&para;</a></h1>
+<h2 id="important-terminologies-to-understand">Important Terminologies to Understand:<a class="headerlink" href="#important-terminologies-to-understand" title="Permanent link">&para;</a></h2>
+<h3 id="1-a-a-times-b-grid-of-windows-refers-to-ab-total-number-of-windows"><em>(1) A <span class="arithmatex">\(A \times B\)</span> grid of windows refers to <span class="arithmatex">\(AB\)</span> total number of windows</em><a class="headerlink" href="#1-a-a-times-b-grid-of-windows-refers-to-ab-total-number-of-windows" title="Permanent link">&para;</a></h3>
+<ul>
+<li>when we say a <span class="arithmatex">\(A \times B\)</span> grid we mean the number of windows wrt both height and width</li>
+<li>A refers to the number of windows wrt the full <strong>width</strong> of the image</li>
+<li>B refers to the number of windows wrt the full <strong>length</strong> of the image</li>
+<li>grid usually means a literal grid of windows, similar to how we split an image up into 4 patches, we have a <span class="arithmatex">\(2 \times 2\)</span> grid of images </li>
+</ul>
+<h3 id="2-image-divided-into-a-times-b-patches"><em>(2) $image divided into <span class="arithmatex">\(A \times B\)</span> patches</em><a class="headerlink" href="#2-image-divided-into-a-times-b-patches" title="Permanent link">&para;</a></h3>
+<ul>
+<li>the <span class="arithmatex">\(A \times B\)</span> here refer to the actual size per patch</li>
+<li>meaning from an image of <span class="arithmatex">\(224 \times 224\)</span>, we will get <span class="arithmatex">\(\frac{224}{A}\)</span> number of patches wrt the width, and <span class="arithmatex">\(\frac{224}{B}\)</span> number of patches wrt the height</li>
+<li>resulting in a total of <span class="arithmatex">\(\frac{224}{A} \times \frac{224}{B}\)</span> number of patches</li>
+</ul>
+<h2 id="part-1-hierachical-feature-maps">Part 1: Hierachical Feature Maps<a class="headerlink" href="#part-1-hierachical-feature-maps" title="Permanent link">&para;</a></h2>
+<ul>
+<li>in ViT, images split into patches</li>
+<li>these patches remain the same size throughout every single layer of the network</li>
+<li>this produces a single-resolution feature map which is bad for dense predictions like detecting small objects</li>
+<li>swin transformers fixes this my mimicking the structure of traditional CNNs</li>
+<li>it build a hierachical feature map by merging patches as the network gets deeper</li>
+</ul>
+<h3 id="input">Input<a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<ul>
+<li>We start with an image of size <span class="arithmatex">\(H \times W \times 3\)</span> (Height, Wdith, Channels - RGB)</li>
+</ul>
+<h3 id="stage-1">Stage 1<a class="headerlink" href="#stage-1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Images divided into small patches (usually <span class="arithmatex">\(4 \times 4\)</span> pixels)</li>
+<li>This gives a feature map resolution of <span class="arithmatex">\(\frac{H}{4} \times \frac{W}{4}\)</span></li>
+</ul>
+<h3 id="stage-2-3-and-4">Stage 2, 3 and 4<a class="headerlink" href="#stage-2-3-and-4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>As tokens move deeper into the network, neighbouring patches are systematically merged together (e.g. <span class="arithmatex">\(2 \times 2\)</span> neighbouring patches become 1 token)</li>
+</ul>
+<h3 id="final">Final<a class="headerlink" href="#final" title="Permanent link">&para;</a></h3>
+<ul>
+<li>By the final stage, spatial resolution drops to <span class="arithmatex">\(\frac{H}{32} \times \frac{W}{32}\)</span></li>
+<li>just like CNN, swin transformer's feature map starts large with great details</li>
+<li>we say <strong>'large'</strong> because with a <span class="arithmatex">\(4 \times 4\)</span> patches in a <span class="arithmatex">\(224 \times 224\)</span> image, we will end up with a <strong>large</strong> grid of <span class="arithmatex">\(56 \times 56\)</span> individual results</li>
+<li>many <span class="arithmatex">\(4 \times 4\)</span> pixels patches will show us great small level details such as corners, textures, sharp edges</li>
+<li>moving up to stage 4, we will end up with a high-level overview of the image with larger patches </li>
+<li>these large patches are able to look at features such as shape and whole objects</li>
+</ul>
+<h2 id="part-2-linear-embedding-and-patch-merging">Part 2: Linear Embedding and Patch Merging<a class="headerlink" href="#part-2-linear-embedding-and-patch-merging" title="Permanent link">&para;</a></h2>
+<h3 id="stage-1-patch-partition-linear-embedding">Stage 1: Patch Partition &amp; Linear Embedding<a class="headerlink" href="#stage-1-patch-partition-linear-embedding" title="Permanent link">&para;</a></h3>
+<ul>
+<li>the <span class="arithmatex">\(4 \times 4\)</span> patches (of <span class="arithmatex">\(4 \times 4 \times 3 = 48\)</span> values) are flattened</li>
+<li>resulting in <span class="arithmatex">\(48\)</span> raw pixel values in a vector form</li>
+<li>we pass this through a <strong>Linear Layer</strong> to a specified channel dimension, denoted as <span class="arithmatex">\(C\)</span> (an arbitrary hidden size, like 96)</li>
+<li>meaning each patch will now be a single 1D vector of length C</li>
+<li>this transforms our <span class="arithmatex">\(\frac{H}{4} \times \frac{W}{4} \times 48\)</span> raw pixel grid into a clean token grid of shape:</li>
+</ul>
+<div class="arithmatex">\[\frac{H}{4} \times \frac{W}{4} \times C\]</div>
+<h3 id="stages-2-3-4-patch-merging">Stages 2, 3, 4: Patch Merging<a class="headerlink" href="#stages-2-3-4-patch-merging" title="Permanent link">&para;</a></h3>
+<ul>
+<li>to downsample the spatial grid and increase the channel depth as we move deeper, the network uses a <strong>Patch Merging layer</strong></li>
+<li>it acts like a pooling layer in CNN, but it doesn't throw away any data</li>
+</ul>
+<h3 id="between-stage-1-and-stage-2">Between Stage 1 and Stage 2:<a class="headerlink" href="#between-stage-1-and-stage-2" title="Permanent link">&para;</a></h3>
+<h4 id="1-concatenate">(1) Concatenate<a class="headerlink" href="#1-concatenate" title="Permanent link">&para;</a></h4>
+<ul>
+<li>it takes groups of <span class="arithmatex">\(2 \times 2\)</span> neighbouring patches and concatenates their features together</li>
+<li>gluing 4 neighbours together gives a single token with <span class="arithmatex">\(4C\)</span> channels</li>
+</ul>
+<h4 id="2-downsample">(2) Downsample<a class="headerlink" href="#2-downsample" title="Permanent link">&para;</a></h4>
+<ul>
+<li>since we group <span class="arithmatex">\(2 \times 2\)</span> patches into 1, the spatial grid resolution is cut into half (reduced)</li>
+<li>from <span class="arithmatex">\(\frac{H}{4} \times \frac{W}{4}\)</span> down to <span class="arithmatex">\(\frac{H}{8} \times \frac{W}{8}\)</span></li>
+</ul>
+<h4 id="3-linear-reduction">(3) Linear Reduction<a class="headerlink" href="#3-linear-reduction" title="Permanent link">&para;</a></h4>
+<ul>
+<li>To keep channel count from blowing up too fast, a linear layer projects the <span class="arithmatex">\(4C\)</span> down to <span class="arithmatex">\(2C\)</span></li>
+<li>meaning that initially our 4 combined patch has a combined length of 4C, but then because we linearly project it onto a linear layer, we reduce the length of vector to <span class="arithmatex">\(2C\)</span></li>
+</ul>
+<h4 id="4-pattern">(4) Pattern<a class="headerlink" href="#4-pattern" title="Permanent link">&para;</a></h4>
+<ul>
+<li>this pattern continues between stages</li>
+<li>every time you pass through a Patch Merging layer, the spatial resolution is halved, and the channel depth is doubled.<ul>
+<li>Stage 1: <span class="arithmatex">\(\frac{H}{4} \times \frac{W}{4} \times C\)</span></li>
+<li>Stage 2: <span class="arithmatex">\(\frac{H}{8} \times \frac{W}{8} \times 2C\)</span></li>
+<li>Stage 3: <span class="arithmatex">\(\frac{H}{16} \times \frac{W}{16} \times 4C\)</span></li>
+<li>Stage 4: <span class="arithmatex">\(\frac{H}{32} \times \frac{W}{32} \times 8C\)</span></li>
+</ul>
+</li>
+</ul>
+<h2 id="part-3-window-based-self-attention">Part 3: Window-based Self Attention<a class="headerlink" href="#part-3-window-based-self-attention" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Swin introduces Window-based Self-Attention</li>
+<li>this W-MSA runs inside every stage</li>
+</ul>
+<h3 id="how-w-msa-works">How W-MSA works:<a class="headerlink" href="#how-w-msa-works" title="Permanent link">&para;</a></h3>
+<ul>
+<li>swin divides the feature map into a grid of non-overlapping windows</li>
+<li>the original paper uses a standard window size of <span class="arithmatex">\(7 \times 7\)</span></li>
+<li>self-attention is only calculated within each individual window</li>
+<li>a patch is window A can only talk to other patches in window A</li>
+</ul>
+<h3 id="math">Math:<a class="headerlink" href="#math" title="Permanent link">&para;</a></h3>
+<ul>
+<li>since attention is confined to a fixed <span class="arithmatex">\(7 \times 7 = 49\)</span> tokens</li>
+<li>the cost to calculate attention inside a single window is always constant <span class="arithmatex">\((49^2)\)</span></li>
+<li>if we scale up the image size, we can just add more windows</li>
+<li>this changes the computational cost from quadratic <span class="arithmatex">\(O(N^2)\)</span> to linear <span class="arithmatex">\(O(N)\)</span></li>
+</ul>
+<h2 id="part-4-shifted-window-attention">Part 4: Shifted Window Attention<a class="headerlink" href="#part-4-shifted-window-attention" title="Permanent link">&para;</a></h2>
+<ul>
+<li>windows are isolated</li>
+<li>swin transformers come in a pair of 2 consecutive blocks:<ul>
+<li>Block 1 uses Regular Windowing (W-MSA) which is explained in Part 3</li>
+<li>Block 2 uses Shifted Windowing (SW-MSA)</li>
+</ul>
+</li>
+</ul>
+<h3 id="how-sw-msa-works">How SW-MSA works:<a class="headerlink" href="#how-sw-msa-works" title="Permanent link">&para;</a></h3>
+<ul>
+<li>a <span class="arithmatex">\(2 \times 2\)</span> grid of large windows (total 4 windows in the whole image)</li>
+<li>when we shift, we slide the entire window grid down by <span class="arithmatex">\(\lfloor \frac{M}{2} \rfloor\)</span> pixels</li>
+<li>the paper used a window size of <span class="arithmatex">\(7 \times 7\)</span>, which means we shift the grid by 3 patches down and 3 patches right</li>
+<li>By shifting the boundaries, the new windows are centered directly on top of the old boundaries.</li>
+<li>Patches that were separated into completely different windows in Block 1 now find themselves sitting inside the same window in Block 2. They can now run self-attention together, seamlessly passing information across the old borders</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.top", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
